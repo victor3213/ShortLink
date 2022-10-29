@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import {Menu, Icon, Container} from 'semantic-ui-react'
 
 import Register from "../modals/Register";
+import Login from '../modals/Login'
+
 const HomeNavbar = () => {
     const openModal = () => {
          <Register/>
@@ -24,11 +26,8 @@ const HomeNavbar = () => {
                         />
                 </Menu.Menu>
                 <Menu.Menu position='right'>
-                    <Menu.Item
-                        name='Log In'
-                        // onClick={this.handleItemClick}
-                    />
-                    <Register/>
+                    <Login/>
+                    <Register name='Register'/>
                 </Menu.Menu>
             </Menu>
         </Container>
