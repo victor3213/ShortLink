@@ -87,6 +87,8 @@ const CreateUrl = ({name}) => {
                  >
                      <input />
                  </Input>
+                 <br>
+                 </br>
                      <Button 
                          onClick={()=> getShortUrl()}
                      >
