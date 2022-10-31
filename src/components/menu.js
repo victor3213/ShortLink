@@ -18,7 +18,7 @@ const Meniu = () => {
         if(items?.role_id == admin){
             return <>
                 <Menu.Item
-                    name='Custom Linkss'
+                    name='Custom Links'
                     active={activeIndex === 'Custom Links'}
                     onClick={(e, val) => handleClick(e, val)}
                 />
