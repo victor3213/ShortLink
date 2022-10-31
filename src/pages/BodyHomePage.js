@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Divider, Button, Grid, Icon, Segment, Item, Input, Label, Accordion} from 'semantic-ui-react'
 import Register from "../components/modals/Register";
 import '../App.css'
-
+import doRequest from '../components/api'
 
 const InfoAboutShortUrl = () => {
     return (
@@ -77,17 +77,30 @@ const isValidUrl = (str) => {
     return (res !== null)
 }
 const TemplateUrl = (oldUrl ='este vechi', newUrl = 'este nou') => {
+    
+    if(oldUrl.length > 50){
+        oldUrl = oldUrl.slice(0, 50) + '...'
+    }
+
     return (
         <Grid columns='equal'>
             <Grid.Row 
-                columns={2}
+                columns={3}
             >
                 <Grid.Column textAlign='center'>
+                <Segment basic/>
                     <Segment basic>
-                        {oldUrl}
+                       Old: {oldUrl}
                     </Segment>
                 </Grid.Column>
                 <Grid.Column textAlign='center'>
+                <Segment basic/>
+
+                    <Segment basic>
+                       New: {newUrl}
+                    </Segment>
+                </Grid.Column>
+                <Grid.Column textAlign='center' style={{marginTop:'32px'}}>
                     <Segment basic>
                         <Input
                             action={{
@@ -110,15 +123,25 @@ const TryShortUrl = () => {
     const [url, setUrl] = useState('')
     const [error, setError] = useState(false)
     const [templateShUrl, setTemplateShUrl] = useState('')
-
+    
     const getShortUrl = () => {
+        let prepareData = {
+            longUrl: url,
+            typeOfUrl: 'simple',
+            action: 'getShortUrl'
+        }
+         doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
+            .then((response) => response.json())
+            .then((data) => {
+                if(data['Status'] == 'Success'){
+                    setTemplateShUrl(TemplateUrl(url, data['data']))
+                }
+            });
         if (!isValidUrl(url)) {
             setTemplateShUrl('')
             setError(true)
             return
         }
-
-        setTemplateShUrl(TemplateUrl())
     }
     
     return (
@@ -129,12 +152,12 @@ const TryShortUrl = () => {
                 <Input
                     fluid
                     placeholder='Url...'
-                    name='url'
+                    name='url' 
                     onChange={(e, val) => setUrl(val?.value)}
                 >
                     <input />
                     <Button 
-                        onClick={() => getShortUrl()}
+                        onClick={()=> getShortUrl()}
                     >
                         Get Short Url
                     </Button>

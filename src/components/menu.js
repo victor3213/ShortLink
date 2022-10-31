@@ -3,8 +3,8 @@ import { Grid, Menu } from 'semantic-ui-react'
 
 
 import WhatContent from './content/whatContent'
+import {admin} from './configuration/config'
 
-const ROLE = 'admin'
 const Meniu = () => {
     const [activeIndex, setActiveIndex] = useState('My Links')
     const handleClick = (e, val) => {
@@ -12,9 +12,16 @@ const Meniu = () => {
         let newIndex = (activeIndex === index) ? -1 : index
         setActiveIndex(newIndex)
     }
-    const ifIsAdmin = (role) => {
-        if(role == ROLE){
+
+    const ifIsAdmin = () => {
+        const items = JSON.parse(localStorage.getItem('user'))
+        if(items?.role_id == admin){
             return <>
+                <Menu.Item
+                    name='Custom Links'
+                    active={activeIndex === 'Custom Links'}
+                    onClick={(e, val) => handleClick(e, val)}
+                />
                 <Menu.Item
                     name='Users'
                     active={activeIndex === 'Users'}
@@ -40,11 +47,11 @@ const Meniu = () => {
                     onClick={(e, val) => handleClick(e, val)}
                 />
                 <Menu.Item
-                    name='Custom Links'
-                    active={activeIndex === 'Custom Links'}
+                    name='Create Link'
+                    active={activeIndex === 'Create Link'}
                     onClick={(e, val) => handleClick(e, val)}
                 />
-                {ifIsAdmin(ROLE)}
+                {ifIsAdmin()}
             </Menu>
             </Grid.Column>
 

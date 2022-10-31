@@ -1,31 +1,92 @@
 import React, { useState } from "react";
-import {Menu, Button, Header, Icon, Modal, Checkbox, Form, Input } from "semantic-ui-react";
+import {Menu, Button, Header, Icon, Modal, Form, Input, Message, List} from "semantic-ui-react";
+import doRequest from "../api";
+
+
+const TemplateErrors = (data) => {
+    let arr = []
+    for(let val in data){
+        arr.push(data[val])
+    }
+    
+    return <>
+            <Message
+                error
+                header='Errors'
+                content={<List items={arr} />}
+            />
+    </>
+}
+const sendReuest = () => {
+
+}
 
 const Register = (props) => {
     const [open, setOpen] = useState(false)
+    const [error, setError] = useState(false)
+    const [tempErr, setTempErr] = useState('')
     const data = {}
-    const errors = {}
+   
     
-    const validateData = (datada, val) => {
-        if(val.value)  data[val?.name] = {type: val.type, value: val.value}
+    const getData = (datada, val) => {
+        data[val?.name] = {type: val.type, value: val.value}
     }
 
+    
     const userRegistration = () => {
-        if(data?.length == undefined) {
-            
+        const errors = {}
+        let error = false
+        const propOwn = Object.getOwnPropertyNames(data);
+        if(propOwn.length == 0){
+            errors['all']  = 'Missing all data'
+            error = true
         }
 
-        let error = false
-
-        for (const val in data) {
-            if (data[val].type == 'text') {
-                console.log(data[val]?.value.length);
-                if (data[val]?.value.length < 4 || data[val]?.value.length  > 20){
-
-                }
-            } else if (data[val].type == 'password') {
-
+        for(const val in data){
+            if(data[val]?.type == 'text' && data[val]?.value.length < 4){
+                error = true
+                errors[val] = 'Length of '+ val + 'is < 4' 
             }
+
+            if(data[val]?.type == "password"){
+                if(data[val]?.value.length < 6){
+                    error = true
+                    errors[val] = 'Length of '+ val + 'is < 6' 
+                }
+            }
+        }
+
+        if(data['password']?.value == undefined || data['confirmPassword']?.value == undefined){
+            error = true
+            errors['passowrds'] = 'passowrds not equal'
+        }
+        if(data['password']?.value  !=  data['confirmPassword']?.value){
+            error = true
+            errors['passowrds'] = 'passowrds not equal'
+        }
+        if(error == true){
+            setTempErr(TemplateErrors(errors))
+        } else {
+            setTempErr('')
+            let prepareData = {
+                login: data['login']?.value,
+                firstName: data['firstName']?.value,
+                lastName: data['lastName']?.value,
+                password: data['password']?.value,
+                action: 'registerUser'
+            }
+
+            doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
+                .then((response) => response.json())
+                .then((data) => {
+                    if(data['Status'] == 'Success'){
+                        localStorage.setItem('user', JSON.stringify(data['data']));
+                        window.location.href = '/jfhdskjh';
+                    } else {
+                        errors['error'] = data['Message']
+                        setTempErr(TemplateErrors(errors))
+                    }
+                });
         }
     }
 
@@ -50,7 +111,7 @@ const Register = (props) => {
                             width={'3'}
                             name='firstName' 
                             placeholder='First Name...' 
-                            onChange={(el, val) => validateData(el, val)}    
+                            onChange={(el, val) => getData(el, val)}    
                         />
                     </Form.Field>
                     <Form.Field>
@@ -58,7 +119,7 @@ const Register = (props) => {
                         <Input
                             name='lastName'
                             placeholder='Last Name...'
-                            onChange={(el, val) => validateData(el, val)}
+                            onChange={(el, val) => getData(el, val)}
                         />
                     </Form.Field>
                     <Form.Field>
@@ -66,7 +127,7 @@ const Register = (props) => {
                         <Input
                             name='login' 
                             placeholder='Login...' 
-                            onChange={(el, val) => validateData(el, val)}    
+                            onChange={(el, val) => getData(el, val)}    
                         />
                     </Form.Field>
                     <Form.Field>
@@ -75,7 +136,7 @@ const Register = (props) => {
                             name='password'
                             type='password'
                             placeholder='Password...' 
-                            onChange={(el, val) => validateData(el, val)}
+                            onChange={(el, val) => getData(el, val)}
                         />
                     </Form.Field>
                     <Form.Field>
@@ -84,15 +145,14 @@ const Register = (props) => {
                             name='confirmPassword'
                             type='password'
                             placeholder='Confirm...' 
-                            onChange={(el, val) => validateData(el, val)}    
+                            onChange={(el, val) => getData(el, val)}    
                         />
                     </Form.Field>
                 </Form>
             </Modal.Content>
             <Modal.Actions>
-                <Button basic color='red' inverted onClick={() => setOpen(false)}>
-                    <Icon name='remove' /> Cancel
-                </Button>
+            {tempErr}
+                
                 <Button 
                     color='green' 
                     inverted 

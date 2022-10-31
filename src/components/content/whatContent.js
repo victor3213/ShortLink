@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 
 
-import CustomLinks from "./customLink";
+import CreateLinks from "./createLink";
+import CustomUrl from "./createCustomUrl";
 import Links from "./links";
 import Users from "./users";
 
@@ -13,8 +14,10 @@ const WhatContent = (props) => {
         } else if (index == 'All Links') {
             return <Links links='all'/>
         } else if (index == 'Custom Links') {
-            return <CustomLinks/>
-        } else {
+            return <CustomUrl name='custom'/>
+        } else if (index == 'Create Link'){
+            return <CreateLinks name='simple'/>
+        }else {
             return <Users/>
         }
     }
