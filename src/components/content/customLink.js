@@ -1,6 +1,6 @@
 import React from "react";
 
-const CustomLinks = () => {
+const CreateLinks = (props) => {
     return (
         <>
             Custom Links
@@ -8,4 +8,4 @@ const CustomLinks = () => {
     )
 }
 
-export default CustomLinks
+export default CreateLinks
