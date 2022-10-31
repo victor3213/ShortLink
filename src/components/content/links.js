@@ -20,7 +20,6 @@ const pagination = (totalPages= 10) => {
 
 const Links = (props) => {
     const [links, setLinks] = useState({})
-    console.log(props);
     useEffect(() => {
         let prepareData = {
             userName: '21312eqwsedsqas',
