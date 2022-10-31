@@ -3,6 +3,11 @@ import {Menu, Button, Header, Icon, Modal, Checkbox, Form, Input } from "semanti
 
 const Login = () => {
     const [open, setOpen] = useState(false)
+    
+    const loginUser = () => {
+        
+    }
+
     return (
         <Modal
             basic
@@ -41,7 +46,8 @@ const Login = () => {
                 </Button>
                 <Button 
                     color='green' 
-                    inverted 
+                    inverted
+                    onClick={() => loginUser()}
                 >
                     <Icon name='checkmark' /> Login
                 </Button>

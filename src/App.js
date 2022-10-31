@@ -4,7 +4,6 @@ import { Route, Routes } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 
 import Home from "./pages/Home"
-import Footer from './components/footer'
 import Dashboard from './pages/Dashboard'
 function App() {
   return (
