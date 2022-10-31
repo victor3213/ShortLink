@@ -76,7 +76,7 @@ const Register = (props) => {
                 action: 'registerUser'
             }
 
-            doRequest("http://167.235.192.111:90/", prepareData, 'POST')
+            doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
                 .then((response) => response.json())
                 .then((data) => {
                     if(data['Status'] == 'Success'){

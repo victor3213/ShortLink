@@ -1,5 +1,5 @@
-import React from "react";
-import { Container } from "semantic-ui-react";
+import React, { useEffect } from "react";
+import { Container, Segment} from "semantic-ui-react";
 
 import UserNavbar from "../components/navbar/userNavbar";
 import Meniu from '../components/menu'
@@ -11,10 +11,11 @@ const Dashboard = () => {
             window.location.href = '/'
         }
     }, [])
-    
+
     return (
         <Container>
             <UserNavbar/>
+            <Segment basic/>
             <Meniu/>        
         </Container>
     )
