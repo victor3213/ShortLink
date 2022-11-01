@@ -17,9 +17,7 @@ const TemplateErrors = (data) => {
             />
     </>
 }
-const sendReuest = () => {
 
-}
 
 const Register = (props) => {
     const [open, setOpen] = useState(false)
@@ -78,12 +76,12 @@ const Register = (props) => {
 
             doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
                 .then((response) => response.json())
-                .then((data) => {
-                    if(data['Status'] == 'Success'){
-                        localStorage.setItem('user', JSON.stringify(data['data']));
+                .then((res) => { 
+                    if(res['Status'] == 'Success'){
+                        localStorage.setItem('user', JSON.stringify(res['data']));
                         window.location.href = '/jfhdskjh';
                     } else {
-                        errors['error'] = data['Message']
+                        errors['error'] = res['Message']
                         setTempErr(TemplateErrors(errors))
                     }
                 });
