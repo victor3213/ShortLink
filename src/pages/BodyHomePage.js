@@ -110,7 +110,7 @@ const TemplateUrl = (oldUrl ='este vechi', newUrl = 'este nou') => {
                                 content: 'Copy',
                             }}
                             value={newUrl}
-                            onClick={() => {navigator.clipboard.writeText(newUrl)}}
+                            onClick={navigator.clipboard.writeText(newUrl)}
                         />
                     </Segment>
                 </Grid.Column>

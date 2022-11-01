@@ -1,9 +1,26 @@
 import React, { Component, useState } from "react";
-import {Menu, Button, Header, Icon, Modal, Checkbox, Form, Input } from "semantic-ui-react";
+import {Menu, Button, Header, Icon, Modal, Message, Form, Input, List } from "semantic-ui-react";
 import doRequest from "../api";
 
+const TemplateErrors = (data) => {
+    let arr = []
+    for(let val in data){
+        arr.push(data[val])
+    }
+    
+    return <>
+            <Message
+                error
+                header='Errors'
+                content={<List items={arr} />}
+            />
+    </>
+}
+
 const Login = () => {
+    const errors = {}
     const [open, setOpen] = useState(false)
+    const [tempErr, setTempErr] = useState('')
     const values = {}
 
     const saveValue = (e, val) => {
@@ -21,6 +38,7 @@ const Login = () => {
         if (error) {
 
         } else {
+            
             let prepareData = {
                 login: values['login'],
                 password: values['password'],
@@ -34,7 +52,8 @@ const Login = () => {
                         localStorage.setItem('user', JSON.stringify(data['data']));
                         window.location.href = '/jfhdskjh';
                     } else {
-                        
+                        errors['error'] = data['Message']
+                        setTempErr(TemplateErrors(errors))
                     }
                 });
         }
@@ -75,6 +94,7 @@ const Login = () => {
                 </Form>
             </Modal.Content>
             <Modal.Actions>
+            {tempErr}
                 <Button basic color='red' inverted onClick={() => setOpen(false)}>
                     <Icon name='remove' /> Cancel
                 </Button>
