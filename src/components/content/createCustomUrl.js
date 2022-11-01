@@ -17,11 +17,9 @@ const TemplateUrl = (oldUrl ='', newUrl = '') => {
                             action={{
                                 color: 'teal',
                                 labelPosition: 'right',
-                                icon: 'copy',
-                                content: 'Copy',
                             }}
                             value={newUrl}
-                            onClick={navigator.clipboard.writeText(newUrl)}
+                            // onClick={navigator.clipboard.writeText(newUrl)}
                         />
                     </Segment></List.Item>
             </List>
