@@ -21,7 +21,7 @@ const TemplateUrl = (oldUrl ='', newUrl = '') => {
                                 content: 'Copy',
                             }}
                             value={newUrl}
-                            onClick={() => {navigator.clipboard.writeText(newUrl)}}
+                            onClick={navigator.clipboard.writeText(newUrl)}
                         />
                     </Segment></List.Item>
             </List>

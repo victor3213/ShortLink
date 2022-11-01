@@ -21,7 +21,7 @@ const TemplateUrl = (oldUrl ='', newUrl = '') => {
                                 content: 'Copy',
                             }}
                             value={newUrl}
-                            onClick={() => {navigator.clipboard.writeText(newUrl)}}
+                            onClick={navigator.clipboard.writeText(newUrl)}
                         />
                     </Segment></List.Item>
             </List>
@@ -41,12 +41,13 @@ const CreateUrl = ({name}) => {
     const [customName, setCustomName] = useState('')
     const [error, setError] = useState(false)
     const [templateShUrl, setTemplateShUrl] = useState('')
-
+    const items = JSON.parse(localStorage.getItem('user'))
     const getShortUrl = () => {
         let prepareData = {
             longUrl: url,
             typeOfUrl: 'simple',
-            action: 'getShortUrl'
+            action: 'getShortUrl',
+            userId:  +items?.id
         }
         doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
         .then((response) => response.json())
