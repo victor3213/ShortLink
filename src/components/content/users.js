@@ -5,19 +5,18 @@ import {Table} from 'semantic-ui-react'
 const headerTable = (props) => {
     return <Table.Header>
             <Table.Row>
-                <Table.HeaderCell>idUser</Table.HeaderCell>
-                <Table.HeaderCell>First Name</Table.HeaderCell>
-                <Table.HeaderCell>Last Name</Table.HeaderCell>
-                <Table.HeaderCell>Login</Table.HeaderCell>
-                <Table.HeaderCell>Role </Table.HeaderCell>
-                <Table.HeaderCell>Password</Table.HeaderCell>
-                <Table.HeaderCell>Password</Table.HeaderCell>
+                <Table.HeaderCell key={'idUser'}>idUser</Table.HeaderCell>
+                <Table.HeaderCell key={'FirstName'}>First Name</Table.HeaderCell>
+                <Table.HeaderCell key={'LastName'}>Last Name</Table.HeaderCell>
+                <Table.HeaderCell key={'Login'}>Login</Table.HeaderCell>
+                <Table.HeaderCell key={'Role'}>Role</Table.HeaderCell>
+                <Table.HeaderCell key={'Password'}>Password</Table.HeaderCell>
+                <Table.HeaderCell key={'DateTime'}>Date Time</Table.HeaderCell>
             </Table.Row>
         </Table.Header>
 }
 
 const ColumnTable = ({values}) => {
-    console.log(values);
     let pass = ''
     if(values?.password.length > 20){
         pass = values?.password.slice(0,20)
@@ -48,7 +47,6 @@ const Users = (props) => {
         doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             setUsers(data)
         });
     }, [props])

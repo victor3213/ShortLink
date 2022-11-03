@@ -2,6 +2,9 @@ import React, {useState, useEffect} from "react";
 import {List, Segment, Input, Label, Button} from 'semantic-ui-react'
 import doRequest from  '../../components/api'
 
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+
 const TemplateUrl = (oldUrl ='', newUrl = '') => {
     if(oldUrl.length > 50){
         oldUrl = oldUrl.slice(0, 50) + '...'
@@ -11,19 +14,7 @@ const TemplateUrl = (oldUrl ='', newUrl = '') => {
         <Segment>
             <List>
                 <List.Item> Old: {oldUrl}</List.Item>
-                <List.Item>  New: {newUrl}</List.Item>
-                <List.Item><Segment basic>
-                        <Input
-                            action={{
-                                color: 'teal',
-                                labelPosition: 'right',
-                                icon: 'copy',
-                                content: 'Copy',
-                            }}
-                            value={newUrl}
-                            onClick={navigator.clipboard.writeText(newUrl)}
-                        />
-                    </Segment></List.Item>
+                <List.Item> New: {newUrl}</List.Item>
             </List>
         </Segment>
        
@@ -38,37 +29,38 @@ const isValidUrl = (str) => {
 
 const CreateUrl = ({name}) => {
     const [url, setUrl] = useState('')
-    const [customName, setCustomName] = useState('')
-    const [error, setError] = useState(false)
     const [templateShUrl, setTemplateShUrl] = useState('')
     const items = JSON.parse(localStorage.getItem('user'))
     const getShortUrl = () => {
+        
+        if (!isValidUrl(url)) {
+            setTemplateShUrl('')
+            NotificationManager.warning('Warning', 'The link is not valid', 3000);
+            return
+        }
+
         let prepareData = {
             longUrl: url,
             typeOfUrl: 'simple',
             action: 'getShortUrl',
-            userId:  +items?.id
+            token:  JSON.stringify(items.token)
         }
         doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
         .then((response) => response.json())
         .then((data) => {
             if(data['Status'] == 'Success'){
                 setTemplateShUrl(TemplateUrl(url, data['data']))
+                NotificationManager.success('The link is added to the "My Links" page', 'Congratulations', 3000);
+            } else if(data['Status'] === 'Warning') {
+                NotificationManager.warning(data['Message'], 'oops', 3000);
+            } else if(data['Status'] === 'Error'){
+                NotificationManager.error(data['Message'], 'Fatal Error', 3000);
             }
         });
-
-        if (!isValidUrl(url)) {
-            setTemplateShUrl('')
-            setError(true)
-            return
-        }
     }
     
     return (
         <Segment basic textAlign="center">
-                 {error &&   <Label basic color='red' pointing='below'>
-                    The Url is Invalid
-                 </Label>}
                  <Input
                      fluid
                      placeholder='Url...'
@@ -83,6 +75,7 @@ const CreateUrl = ({name}) => {
                          Get Short Url
                      </Button>
                  {templateShUrl}
+                 <NotificationContainer/>
         </Segment>
      )
 }
