@@ -5,6 +5,8 @@ import 'semantic-ui-css/semantic.min.css'
 
 import Home from "./pages/Home"
 import Dashboard from './pages/Dashboard'
+import ErrorPage from './pages/404'
+
 function App() {
   return (
     <>
@@ -19,7 +21,7 @@ function App() {
               exact 
               element={<Dashboard/>}
           />
-          
+           <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );
