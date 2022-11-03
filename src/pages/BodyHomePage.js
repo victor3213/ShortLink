@@ -7,7 +7,6 @@ import doRequest from '../components/api'
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
-
 const InfoAboutShortUrl = () => {
     return (
         <Grid
@@ -80,8 +79,9 @@ const isValidUrl = (str) => {
     let res = str.match(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g);
     return (res !== null)
 }
-const TemplateUrl = (oldUrl ='este vechi', newUrl = 'este nou') => {
-    
+
+const TemplateUrl = (oldUrl ='', newUrl = '') => {
+
     if(oldUrl.length > 50){
         oldUrl = oldUrl.slice(0, 50) + '...'
     }
@@ -102,19 +102,6 @@ const TemplateUrl = (oldUrl ='este vechi', newUrl = 'este nou') => {
 
                     <Segment basic>
                        New: {newUrl}
-                    </Segment>
-                </Grid.Column>
-                <Grid.Column textAlign='center' style={{marginTop:'32px'}}>
-                    <Segment basic>
-                        <Input
-                            value={newUrl}
-                        />{' '}
-                        <Button 
-                            content='Copy'
-                            icon='left arrow'
-                            labelPosition='left'
-                            onClick={() => {navigator.clipboard.writeText(newUrl)}}
-                        />
                     </Segment>
                 </Grid.Column>
             </Grid.Row>

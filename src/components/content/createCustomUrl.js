@@ -15,18 +15,6 @@ const TemplateUrl = (oldUrl ='', newUrl = '') => {
             <List>
                 <List.Item> Old: {oldUrl}</List.Item>
                 <List.Item> New: {newUrl}</List.Item>
-                <List.Item><Segment basic>
-                <Input
-                    value={newUrl}
-                />
-                {' '}
-                <Button 
-                    content='Copy'
-                    icon='left arrow'
-                    labelPosition='left'
-                    onClick={() => {navigator.clipboard.writeText(newUrl)}}
-                />
-                </Segment></List.Item>
             </List>
         </Segment>
        
