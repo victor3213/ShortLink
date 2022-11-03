@@ -10,14 +10,13 @@ const Links = (props) => {
     useEffect(() => {
         let prepareData = {
             action: 'getUrls',
-            userId: +items?.id,
+            token: JSON.stringify(items.token),
             all: (props?.links === 'my') ? false : true
         }
     
         doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             setLinks(data)
         });
     }, [props])

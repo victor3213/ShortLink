@@ -4,6 +4,10 @@ import Register from "../components/modals/Register";
 import '../App.css'
 import doRequest from '../components/api'
 
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+
+
 const InfoAboutShortUrl = () => {
     return (
         <Grid
@@ -73,7 +77,7 @@ const InfoAboutShortUrl = () => {
 }
 
 const isValidUrl = (str) => {
-    var res = str.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    let res = str.match(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g);
     return (res !== null)
 }
 const TemplateUrl = (oldUrl ='este vechi', newUrl = 'este nou') => {
@@ -103,14 +107,13 @@ const TemplateUrl = (oldUrl ='este vechi', newUrl = 'este nou') => {
                 <Grid.Column textAlign='center' style={{marginTop:'32px'}}>
                     <Segment basic>
                         <Input
-                            action={{
-                                color: 'teal',
-                                labelPosition: 'right',
-                                icon: 'copy',
-                                content: 'Copy',
-                            }}
                             value={newUrl}
-                            onClick={navigator.clipboard.writeText(newUrl)}
+                        />{' '}
+                        <Button 
+                            content='Copy'
+                            icon='left arrow'
+                            labelPosition='left'
+                            onClick={() => {navigator.clipboard.writeText(newUrl)}}
                         />
                     </Segment>
                 </Grid.Column>
@@ -121,34 +124,37 @@ const TemplateUrl = (oldUrl ='este vechi', newUrl = 'este nou') => {
 
 const TryShortUrl = () => {
     const [url, setUrl] = useState('')
-    const [error, setError] = useState(false)
     const [templateShUrl, setTemplateShUrl] = useState('')
     
     const getShortUrl = () => {
-        let prepareData = {
-            longUrl: url,
-            typeOfUrl: 'simple',
-            action: 'getShortUrl'
-        }
-         doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
-            .then((response) => response.json())
-            .then((data) => {
-                if(data['Status'] == 'Success'){
-                    setTemplateShUrl(TemplateUrl(url, data['data']))
-                }
-            });
         if (!isValidUrl(url)) {
             setTemplateShUrl('')
-            setError(true)
-            return
+            NotificationManager.warning('Warning', 'The link is not valid', 3000);
+            return false;
         }
+
+        let prepareData = {
+            longUrl: url,
+            action: 'getShortUrl'
+        }
+
+        doRequest("http://167.235.192.111:90/api", prepareData, 'POST')
+        .then((response) => response.json())
+        .then((data) => {
+            if(data['Status'] == 'Success'){
+                setTemplateShUrl(TemplateUrl(url, data['data']))
+                NotificationManager.success('You have successfully created a shortlink', 'Congratulations', 3000);
+            } else if(data['Status'] == 'Error') {
+                NotificationManager.error(data['Message'], 'Error', 3000);
+            } else {
+                NotificationManager.warning('The link is not valid', 'Warning', 3000);
+            }
+        });
+
     }
     
     return (
        <Segment basic textAlign="center">
-                {error &&   <Label basic color='red' pointing='below'>
-                   The Url is Invalid
-                </Label>}
                 <Input
                     fluid
                     placeholder='Url...'
@@ -278,6 +284,7 @@ const BodyHomePage = () => {
                 question
            </Divider>
            <Question/>
+           <NotificationContainer/>
         </Container>
     )
 }
